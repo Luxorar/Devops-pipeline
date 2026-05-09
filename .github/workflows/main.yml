@@ -41,4 +41,34 @@ jobs:
         name: jacoco-report
         path: target/site/jacoco/
 
+    - name: Authenticate Snyk CLI
+      env:
+        SNYK_TOKEN: ${{secrets.SNYK_TOKEN}}
+      run: snyk auth $SNYK_TOKEN
 
+    - name: Snyk test Java dependencies
+      run: snyk test --severity-threshold=high
+
+    - name: Generate Snyl JSON Report
+      if: always()
+      run: |
+        echo "Generando reporte JSON  de Snyk..."
+        snyk test --json > snyk-report.json || echo "Falló snyk test, pero se continúa"
+        ls -lh snyk-report.json || echo "no se generó el reporte"
+
+    - name: Uploa Snyk JSON Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: snyk-report
+        path: snyk-report.json
+
+    - name: Run SonarCloud Analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        mvn verify sonar:sonar \
+        -Dsonar.projectKey= GabrielGobriel_Jacoco-sonacloud \
+        -Dsonar.organization= gabrielgrobier \
+        -Dsonar.host.url= hhtps://sonarcloud.io \
+        -Dsonar.login=${SONAR_TOKEN}
