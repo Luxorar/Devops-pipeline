@@ -50,7 +50,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: install Snyk SLI
+    - name: install Snyk CLI
       run: npm install -g snyk
 
     - name: Authenticate Snyk CLI
