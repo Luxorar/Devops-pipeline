@@ -50,8 +50,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
     - name: install Snyk CLI
-      run: npm install -g snyk
+      run: sudo npm install -g snyk
 
     - name: Authenticate Snyk CLI
       env:
@@ -118,7 +124,7 @@ jobs:
   Sonar-Analysis:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
-    needs: test
+    needs: test-Snyk
 
     steps:
     - name: Checkout code
@@ -141,14 +147,14 @@ jobs:
 
     - name: Run SonarCloud Analysis
       env:
-        SONAR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         mvn verify sonar:sonar \
         -Dsonar.projectKey= Luxorar_Devops-pipeline \
         -Dsonar.organization= luxorar \
         -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.login=${SONAR_TOKEN}
-
+#============================================BUILD======================================  
   build:
     name: Build Jar
     runs-on: ubuntu-latest
