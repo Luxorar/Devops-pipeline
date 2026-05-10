@@ -41,7 +41,7 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/
-#========================================================================================================
+#==================================SNYK======================================================================
   snyk-scan:
     name: Snyk Security Scan
     runs-on: ubuntu-latest
@@ -169,7 +169,7 @@ jobs:
       run: mvn clean package -DskipTests
       
     - name: Upload Jar Artifact
-      run: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: app-jar
         path: target/*.jar 
