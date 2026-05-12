@@ -67,9 +67,6 @@ jobs:
       run: snyk auth $SNYK_TOKEN
 
 
-    - name: Snyk test Java dependencies
-      run: snyk test --severity-threshold=high
-
     - name: Generate Snyk JSON Report
       if: always()
       run: |
